@@ -1,0 +1,30 @@
+import pandas as pd 
+Import matplotlib.pyplot as plt 
+From sklearn.model_selection import train_test_split 
+From sklearn.linear_model import LogisticRegression 
+From sklearn.metrics import confusion_matrix, accuracy_score 
+# Load data 
+Data = pd.read_csv(‘Social_Network_Ads.csv’) 
+# Features & Target 
+X = data[[‘Age’, ‘EstimatedSalary’]] 
+Y = data[‘Purchased’] 
+# Split 
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2) 
+# Model 
+Model = LogisticRegression() 
+Model.fit(X_train, y_train) 
+# Prediction 
+Y_pred = model.predict(X_test) 
+# Confusion Matrix & Accuracy 
+Cm = confusion_matrix(y_test, y_pred) 
+Print(“Confusion Matrix:\n”, cm) 
+Print(“Accuracy:”, accuracy_score(y_test, y_pred)) 
+# Plot Confusion Matrix 
+Plt.imshow(cm) 
+For i in range(len(cm)): 
+For j in range(len(cm[0])): 
+Plt.text(j, i, cm[i][j], ha=’center’, va=’center’) 
+Plt.title(“Confusion Matrix”) 
+Plt.xlabel(“Predicted”) 
+Plt.ylabel(“Actual”) 
+Plt.show() 

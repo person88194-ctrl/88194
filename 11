@@ -1,0 +1,56 @@
+import numpy as np 
+Import matplotlib.pyplot as plt 
+Import pandas as pd 
+# Dataset 
+X = np.array([ 
+[2.5,2.4],[0.5,0.7],[2.2,2.9],[1.9,2.2],[3.1,3.0], 
+[2.3,2.7],[2.0,1.6],[1.0,1.1],[1.5,1.6],[1.1,0.9] 
+]) 
+Print(“Original Dataset:”) 
+Print(pd.DataFrame(X, columns=[‘x1’,’x2’])) 
+# --- PCA --- 
+Mean = X.mean(axis=0) 
+Xc = X – mean 
+Cov = np.cov(Xc, rowvar=False) 
+Eigvals, eigvecs = np.linalg.eig(cov) 
+Idx = np.argsort(eigvals)[::-1] 
+Eigvals, V = eigvals[idx], eigvecs[:, idx] 
+Print(“\nPCA Results:”) 
+Print(“Mean:”, mean.round(4)) 
+Print(“Covariance Matrix:\n”, cov.round(6)) 
+Print(“Eigenvalues:”, eigvals.round(6)) 
+Print(“Eigenvectors:\n”, V.round(6)) 
+# --- Full Reconstruction --- 
+Z = Xc @ V 
+X_full = Z @ V.T + mean 
+Print(“\nFull Reconstruction:”) 
+Print(pd.DataFrame(np.c_[X, X_full], 
+Columns=[‘Original x1’,’Original x2’,’Reconstructed x1’,’Reconstructed x2’]).round(4)) 
+# --- Partial Reconstruction (1 PC) --- 
+V1 = V[:, :1] 
+Z1 = Xc @ V1 
+X_part = Z1 @ V1.T + mean 
+Print(“\nPartial Reconstruction (1 PC):”) 
+Print(pd.DataFrame(np.c_[X, X_part], 
+Columns=[‘Original x1’,’Original x2’,’Reconstructed x1’,’Reconstructed x2’]).round(4)) 
+# --- Error --- 
+Mse = np.mean((X – X_part)**2) 
+Print(f”\nReconstruction Error (MSE): {mse:.6f}”) 
+# --- Plot --- 
+Plt.figure() 
+Plt.scatter(X[:,0], X[:,1], label=’Original’) 
+Plt.scatter(X_part[:,0], X_part[:,1], marker=’x’, label=’Reconstructed’) 
+# PC1 line 
+T = np.linspace(-3,3,100) 
+Pc_line = mean + np.outer(t, V[:,0]) 
+Plt.plot(pc_line[:,0], pc_line[:,1], linestyle=’—‘, label=’PC1’) 
+# Projection lines 
+For i in range(len(X)): 
+Plt.plot([X[i,0], X_part[i,0]], [X[i,1], X_part[i,1]]) 
+Plt.title(“PCA Reconstruction”) 
+Plt.xlabel(“x1”) 
+Plt.ylabel(“x2”) 
+Plt.legend() 
+Plt.grid() 
+Plt.axis(‘equal’) 
+Plt.show()

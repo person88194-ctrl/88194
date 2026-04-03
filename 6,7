@@ -1,0 +1,33 @@
+import pandas as pd 
+Import matplotlib.pyplot as plt 
+From sklearn.model_selection import train_test_split 
+From sklearn.neighbors import KNeighborsClassifier 
+From sklearn.metrics import accuracy_score, confusion_matrix, classification_report 
+# Load dataset 
+Data = pd.read_csv(‘Diabetespred.csv’) 
+# Features & Target 
+X = data.drop(‘Outcome’, axis=1) 
+Y = data[‘Outcome’] 
+# Train-Test Split 
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2) 
+# Model 
+Model = KNeighborsClassifier(n_neighbors=5) 
+Model.fit(X_train, y_train) 
+# Prediction 
+Y_pred = model.predict(X_test) 
+# Evaluation 
+Print(“Accuracy:”, accuracy_score(y_test, y_pred)) 
+Cm = confusion_matrix(y_test, y_pred) 
+Print(“\nConfusion Matrix:\n”, cm) 
+Print(“\nClassification Report:\n”, classification_report(y_test, y_pred)) 
+# 🔥 Plot Confusion Matrix 
+Plt.imshow(cm) 
+Plt.title(“Confusion Matrix(k=5”) 
+Plt.xlabel(“Predicted”) 
+Plt.ylabel(“Actual”) 
+# Show values on plot 
+For i in range(len(cm)): 
+For j in range(len(cm)): 
+Plt.text(j, i, cm[i][j]) 
+Plt.colorbar() 
+Plt.show() 

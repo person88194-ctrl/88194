@@ -1,34 +1,63 @@
-import pandas as pd 
-Import numpy as np 
-From sklearn.model_selection import train_test_split 
-From sklearn.preprocessing import LabelEncoder 
-From sklearn.naive_bayes import GaussianNB 
-From sklearn.metrics import accuracy_score, confusion_matrix, classification_report 
-Import matplotlib.pyplot as plt 
-import seaborn as sns 
-## 1. Load and Explore the Data 
-# Load dataset 
-Df = pd.read_csv(‘C:/Users/syamy/Desktop/college/car_evaluation.csv’, header=None) 
-Df.columns = [‘Price’, ‘Maintenance’, ‘Doors’, ‘Persons’, ‘Lug_boot’, ‘Safety’, ‘Class’] 
-Print(f”Shape: {df.shape}”) 
-Print(f”Classes:\n{df[‘Class’].value_counts()}”) 
-## 2. Data Preparation and Encoding 
-# Encode categorical features 
-Df_encoded = df.copy() 
-For col in df_encoded.columns: 
-Df_encoded[col] = LabelEncoder().fit_transform(df_encoded[col]) 
-X = df_encoded.iloc[:, :-1] 
-Y = df_encoded.iloc[:, -1] 
-Print(f”Features: {X.shape[1]}, Samples: {X.shape[0]}”) 
-## 3. Train-Test Split 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, 
-stratify=y) 
-Print(f”Train: {X_train.shape[0]}, Test: {X_test.shape[0]}”) 
-## 4. Train Naive Bayes Model 
-Model = GaussianNB() 
-Model.fit(X_train, y_train) 
-Y_train_pred = model.predict(X_train) 
-Y_test_pred = model.predict(X_test) 
-## 5. Model Evaluation and Performance Metrics 
-Train_acc = accuracy_score(y_train, y_train_pred) 
-Test_acc = accuracy_score(y_test, y_test_pred)
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+import matplotlib.pyplot as plt
+import seaborn as sns
+## 1. Load and Explore the Data
+# Load dataset
+df = pd.read_csv('C:/Users/syamy/Desktop/college/car_evaluation.csv', header=None)
+df.columns = ['Price', 'Maintenance', 'Doors', 'Persons', 'Lug_boot', 'Safety', 'Class']
+
+print(f"Shape: {df.shape}")
+print(f"Classes:\n{df['Class'].value_counts()}")
+## 2. Data Preparation and Encoding
+# Encode categorical features
+df_encoded = df.copy()
+for col in df_encoded.columns:
+    df_encoded[col] = LabelEncoder().fit_transform(df_encoded[col])
+
+X = df_encoded.iloc[:, :-1]
+y = df_encoded.iloc[:, -1]
+
+print(f"Features: {X.shape[1]}, Samples: {X.shape[0]}")
+## 3. Train-Test Split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+print(f"Train: {X_train.shape[0]}, Test: {X_test.shape[0]}")
+## 4. Train Naive Bayes Model
+model = GaussianNB()
+model.fit(X_train, y_train)
+
+y_train_pred = model.predict(X_train)
+y_test_pred = model.predict(X_test)
+## 5. Model Evaluation and Performance Metrics
+train_acc = accuracy_score(y_train, y_train_pred)
+test_acc = accuracy_score(y_test, y_test_pred)
+
+print("Naive Bayes Results")
+print("=" * 40)
+print(f"Train Accuracy: {train_acc:.4f}")
+print(f"Test Accuracy:  {test_acc:.4f}")
+print("\nConfusion Matrix:")
+print(confusion_matrix(y_test, y_test_pred))
+# Plots
+cm = confusion_matrix(y_test, y_test_pred)
+# fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+
+# Confusion Matrix
+sns.heatmap(cm, annot=True, cmap='Blues')
+plt.title('Confusion Matrix')
+plt.ylabel('True')
+plt.xlabel('Predicted')
+plt.show()
+# Accuracy Comparison
+metrics = ['Train', 'Test']
+accs = [train_acc, test_acc]
+plt.bar(metrics, accs, color=['green', 'blue'], alpha=0.7)
+plt.ylabel('Accuracy')
+plt.title('Model Accuracy')
+plt.ylim([0, 1])
+
+plt.show()
